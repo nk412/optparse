@@ -1,3 +1,6 @@
+# Optparse - a BASH wrapper for getopts
+# @author : nk412 / nagarjuna.412@gmail.com
+
 optparse_usage="" 
 optparse_contractions=""
 optparse_defaults=""
