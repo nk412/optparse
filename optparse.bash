@@ -37,9 +37,6 @@ function optparse.define(){
 			local variable="$value"
 		elif [ "$key" = "value" ]; then
 			local val="$value"
-			if [ "$val" = "optarg" ]; then
-				val="\$OPTARG"
-			fi
 		fi
 	done;
 
@@ -47,7 +44,8 @@ function optparse.define(){
 		optparse.throw_error "You're supposed to give a variable, dummy! ($short/$long)"
 	fi
 	if [ "$val" = "" ]; then
-		optparse.throw_error "Give a value to set, silly! ($short/$long)"
+		val="\$OPTARG"
+		#optparse.throw_error "Give a value to set, silly! ($short/$long)"
 	fi
 	
 	# build OPTIONS and help
@@ -95,11 +93,11 @@ function optparse.build(){
 	echo -e "*)\nusage ; exit 1;; esac ; done" >> $build_file
 	
 	# Unset global variables
-	unset $optparse_usage
-	unset $optparse_process
-	unset $optparse_arguments_string
-	unset $optparse_defaults
-	unset $optparse_contractions
+	unset optparse_usage
+	unset optparse_process
+	unset optparse_arguments_string
+	unset optparse_defaults
+	unset optparse_contractions
 	
 	# Return file name to parent
 	echo "$build_file"	
