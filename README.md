@@ -95,7 +95,7 @@ the list of posible arguments for an option to autocomplete. It could be a list 
 2. Add 
 
 ```bash    
-`source /path/to/optparse.bash` 
+source /path/to/optparse.bash 
 ```
 to `~/.bashrc`
 
