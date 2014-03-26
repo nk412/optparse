@@ -34,7 +34,7 @@ optparse.define short=f long=file desc="The input file" variable=filename list="
 The `optparse.build` function creates a header script and a configuration file in $HOME/.bash_completion.d/ based on the provided argument definitions.
 
 ```bash
-optparse.build script_name
+$ optparse.build script_name
 ```
 
 ###5. Allow execution to the script and execute it.
@@ -59,12 +59,15 @@ The script can now show completion and make use of the variables. Running the sc
 
 ##### See `sample_event.sh` for a demonstration.
 ### Now to use the command script we can write:
-./sample_event.sh [TAB][TAB]
---name --country --year
-./sample_event.sh --country [TAB][TAB]
-USA Canada Japan Brasil
-./sample_event.sh --name "Football World Cup" --country Brasil --year 2014
-The Football World Cup will be in Brasil in 2014.
+```bash
+$ ./sample_event.sh [TAB][TAB]
+$ --name --country --year
+$ ./sample_event.sh --country [TAB][TAB]
+$ USA Canada Japan Brasil
+$ ./sample_event.sh --name "Football World Cup" --country Brasil --year 2014
+$ The Football World Cup will be in Brasil in 2014.
+```
+
      
 ##Supported definition parameters
 All definition parameters for `optparse.define` are provided as `key=value` pairs, seperated by an `=` sign.
