@@ -28,6 +28,7 @@ optparse.define short=f long=file desc="The input file" variable=filename list="
 
 ```bash
 optparse.define short=f long=file desc="The input file" variable=filename list="\$(my_command)"
+```
 
 ###5. Evaluate your arguments
 The `optparse.build` function creates a header script and a configuration file in $HOME/.bash_completion.d/ based on the provided argument definitions.
