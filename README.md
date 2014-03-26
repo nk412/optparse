@@ -13,18 +13,20 @@ A wrapper that provides a clean and easy way to parse arguments and create Tab c
 Each argument to the script is defined with `optparse.define`, which specifies the option names, a short description, the variable it sets, the default value (if any) and a list of posible values (if any).
 
 ```bash
-optparse.define short=f long=file desc="The input file" variable=filename
+optparse.define short=n long=name desc="The event name" variable=name
 ```
 
 Flags are defined in exactly the same way, but with an extra parameter `value` that is assigned to the variable. 
 
 ```bash
-optparse.define short=v long=verbose desc="Set flag for verbose mode" variable=verbose_mode value=true default=false
+optparse.define short=c long=country desc="The event country" variable=country list="USA Canada Japan Brasil England"
 ```
 
 ```bash
-optparse.define short=f long=file desc="The input file" variable=filename list="string1 string2 string3"
+optparse.define short=y long=year desc="The event year" variable=year list="2006 2010 2014 2020"
 ```
+
+Another way to pass a list is to assign a command output to list variable as follow.
 
 ```bash
 optparse.define short=f long=file desc="The input file" variable=filename list="\$(my_command)"
