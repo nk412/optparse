@@ -88,7 +88,8 @@ function optparse.define(){
 function optparse.build(){
         local script=${1:?}
         local build_file="${script}_optparse"
-        local completion_file="/etc/bash_completion.d/${script}"
+        local completion_dir="$HOME/.bash_completion.d/"
+        local completion_file="${completion_dir}${script}"
 
         # Building getopts header here
 
@@ -149,16 +150,17 @@ done
 EOF
 
 # Create completion script
+mkdir -p $completion_dir
         cat << EOF > $completion_file
 _$script(){
         local cur prev options
         COMPREPLY=()
         cur=\${COMP_WORDS[COMP_CWORD]}
         prev=\${COMP_WORDS[COMP_CWORD-1]}
-        
+
         # The basic options we'll complete.
         options="${options}"
-        
+
         # Complete the arguments to some of the basic commands.
         case \$prev in
                 $optparse_process_completion
