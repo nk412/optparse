@@ -26,10 +26,10 @@ optparse.define short=c long=country desc="The event country" variable=country l
 optparse.define short=y long=year desc="The event year" variable=year list="2006 2010 2014 2020"
 ```
 
-Another way to pass a list is to assign a command output to list variable as follow.
+Another way to pass a completion list is to assign a command output to list variable as follow.
 
 ```bash
-optparse.define short=f long=file desc="The input file" variable=filename list="\$(my_command)"
+optparse.define short=y long=year desc="The event year" variable=year list="\$(my_command)"
 ```
 
 ###5. Evaluate your arguments
