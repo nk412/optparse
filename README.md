@@ -34,13 +34,15 @@ optparse.define short=f long=file desc="The input file" variable=filename list="
 The `optparse.build` function creates a header script and a configuration file in $HOME/.bash_completion.d/ based on the provided argument definitions.
 
 ```bash
-$ optparse.build script_name
+optparse.build script_name
 ```
 
 ###5. Allow execution to the script and execute it.
 ##### See `sample_event_generate_completion.sh` for a demonstration.
 ###6. Source profile bash completion configuration, example:
-source  $HOME/.bash_completion.d/*
+```bash
+$ source  $HOME/.bash_completion.d/*
+```
 
 ###7. In your command script( The script to parse arguments and generate completion ) source the optparse generated file to parse and evaluate arguments.
 
