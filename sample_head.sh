@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Source the optparse.bash file ---------------------------------------------------
 source optparse.bash
