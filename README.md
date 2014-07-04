@@ -5,7 +5,7 @@ A BASH wrapper for getopts and compgen, for simple command-line argument parsing
 A wrapper that provides a clean and easy way to parse arguments and create Tab completion to your BASH scripts. You could also create wrappers for linux commands. It let you define short and long option names, handle flag variables, set default values for optional arguments and an optional list of posible values for options to complete, all while aiming to be as minimal as possible: *One line per argument definition*.
 
 ##Usage
-###1. Install bash-completion package.
+###1. Install bash-completion package from your linux repository.
 ###2. Create a script to generate completion and option parsing files.
 ###3. Source file optparse.bash in the script.
 ###4. Define your arguments in the script.
