@@ -100,10 +100,14 @@ function optparse.define(){
 
 # -----------------------------------------------------------------------------------------------------------------------------
 function optparse.build(){
-        local script=${1:?}
-        local build_file="${script}_optparse"
-        local completion_dir="/etc/bash_completion.d/"
-        local completion_file="${completion_dir}${script}"
+        local script=$1
+        if [[ -z "$script" ]]; then
+            build_file="/tmp/optparse-${RANDOM}.tmp"
+        else
+            build_file="${script}_optparse"
+            completion_dir="/etc/bash_completion.d/"
+            completion_file="${completion_dir}${script}"
+        fi
 
         # Building getopts header here
 
@@ -178,7 +182,7 @@ done
 EOF
 
 # Create completion script
-mkdir -p $completion_dir
+if [[ -n "$completion_file" ]]; then
         cat << EOF > $completion_file
 _$script(){
         local cur prev options
@@ -199,12 +203,13 @@ _$script(){
 }
 complete -F _$script $script
 EOF
+fi
 
         local -A o=( ['#NL']='\n' ['#TB']='\t' )
 
         for i in "${!o[@]}"; do
                 sed -i "s/${i}/${o[$i]}/g" $build_file
-                sed -i "s/${i}/${o[$i]}/g" $completion_file
+                [[ -n "$completion_file" ]] && sed -i "s/${i}/${o[$i]}/g" $completion_file
         done
 
         # Unset global variables
@@ -214,8 +219,13 @@ EOF
         unset optparse_defaults
         unset optparse_contractions
         unset long_options
+        unset optparse_process_completion
+        unset short_options
+        unset required_short_options
+        unset required_long_options
+        unset hash_options
 
         # Return file name to parent
-        echo "$build_file"
+        [[ -z "$script" ]] && echo "$build_file"
 }
 # -----------------------------------------------------------------------------------------------------------------------------
