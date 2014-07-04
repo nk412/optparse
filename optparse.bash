@@ -179,6 +179,9 @@ while getopts "$optparse_arguments_string" option; do
         esac
 done
 
+# Clean up after self
+rm $build_file
+
 EOF
 
 # Create completion script
