@@ -10,7 +10,7 @@ A wrapper that provides a clean and easy way to parse arguments and create Tab c
 ###3. Source file optparse.bash in the script.
 ###4. Define your arguments in the script.
 
-Each argument to the script is defined with `optparse.define`, which specifies the option names, a short description, the variable it sets, the default value (if any) and a list of posible values (if any).
+Each argument to the script is defined with `optparse.define`, which specifies the option names, a short description, the variable it sets, the default value (if any) and a list of posible values (if any). Also you could define options as required to your script.
 
 ```bash
 optparse.define short=n long=name desc="The event name" variable=name
