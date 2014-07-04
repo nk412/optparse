@@ -1,3 +1,4 @@
+#!/bin/bash
 # Optparse - a BASH wrapper for getoptions
 # @author : nk412 / nagarjuna.412@gmail.com
 
@@ -7,7 +8,11 @@ optparse_defaults=""
 optparse_process=""
 optparse_arguments_string=""
 optparse_process_completion=""
-options=""
+short_options=""
+long_options=""
+required_short_options=""
+required_long_options=""
+declare -A hash_options
 
 # -----------------------------------------------------------------------------------------------------------------------------
 function optparse.throw_error(){
@@ -49,6 +54,8 @@ function optparse.define(){
                         local val="$value"
                 elif [ "$key" = "list" ]; then
                         local list="$value"
+				elif [ "$key" = "required" ]; then
+                        local required="$value"
                 fi
         done
 
@@ -66,6 +73,7 @@ function optparse.define(){
                 optparse_usage="${optparse_usage} [default:$default]"
         fi
         optparse_contractions="${optparse_contractions}#NL#TB#TB${long})#NL#TB#TB#TBparams=\"\$params ${short}\";;"
+        optparse_contractions="${optparse_contractions}#NL#TB#TB${long}=*)#NL#TB#TB#TBparams=\"\$params ${short}=\${param#*=}\";;"
         if [ "$default" != "" ]; then
                 optparse_defaults="${optparse_defaults}#NL${variable}=${default}"
         fi
@@ -73,22 +81,28 @@ function optparse.define(){
         if [ "$val" = "\$OPTARG" ]; then
                 optparse_arguments_string="${optparse_arguments_string}:"
         fi
-        optparse_process="${optparse_process}#NL#TB#TB${shortname})#NL#TB#TB#TB${variable}=\"$val\";;"
-
+        optparse_process="${optparse_process}#NL#TB#TB${shortname})#NL#TB#TB#TB${variable}=\"$val\""
+        optparse_process="${optparse_process}#NL#TB#TB#TB\$(grep -q '^=' <<< \"\$OPTARG\") && hash_options[-${shortname}\"\$OPTARG\"]=${long}\"\$OPTARG\";;"
         # Complete options
-        options="${options} ${long}"
+        long_options="${long_options} ${long}"
+        short_options="${short_options} ${short}"
         # Complete command arguments
         if [ "$list" != "" ]; then
-                optparse_process_completion="${optparse_process_completion}#NL#TB#TB--${variable})#NL#TB#TB#TB${variable}_list=\"$list\"#NL#TB#TB#TBCOMPREPLY=( \$(compgen -W \"\${${variable}_list}\" -- \${cur}) )#NL#TB#TB#TBreturn 0;;"
+                optparse_process_completion="${optparse_process_completion}#NL#TB#TB${long})#NL#TB#TB#TB${variable}_list=\"$list\"#NL#TB#TB#TBCOMPREPLY=( \$(compgen -W \"\${${variable}_list}\" -- \${cur}) )#NL#TB#TB#TBreturn 0;;"
         fi
-
+        # Take obligatory parameters
+        if [ "$required" == "true" ]; then
+            required_short_options="${required_short_options} ${short}"
+            required_long_options="${required_long_options} ${long}"
+	    fi
+       hash_options["${short}"]="${long}"
 }
 
 # -----------------------------------------------------------------------------------------------------------------------------
 function optparse.build(){
         local script=${1:?}
         local build_file="${script}_optparse"
-        local completion_dir="$HOME/.bash_completion.d/"
+        local completion_dir="/etc/bash_completion.d/"
         local completion_file="${completion_dir}${script}"
 
         # Building getopts header here
@@ -133,15 +147,29 @@ eval set -- "\$params"
 # Set default variable values
 $optparse_defaults
 
-# Process using getopts
+# Get required options and parameters
+required_short_options="$( sed 's/^ //' <<< "$required_short_options")"
+required_long_options="$( sed 's/^ //' <<< "$required_long_options")"
+
+# Create an associative array with with short options as keys and long options as values
+declare -A hash_options=(\
+$(for option in ${short_options}
+do
+echo -n "[$option]=${hash_options[$option]} "
+done))
+
+# Process using getopts 
 while getopts "$optparse_arguments_string" option; do
+        # Return error when argument is an option of type Ex: --option or --option=xxxxx
+        [[ -n "\$OPTARG" ]] && [[ "\${required_short_options}" == *"\${OPTARG/=*/}"* ]] && echo "Invalid parameter: \${hash_options["\${OPTARG/=*/}"]}"=\${OPTARG#*=} && usage
         case \$option in
                 # Substitute actions for different variables
                 $optparse_process
                 :)
                         echo "Option - \$OPTARG requires an argument"
                         exit 1;;
-                *)
+                *)      
+                        echo "Unknown option: \$option"
                         usage
                         exit 1;;
         esac
@@ -159,7 +187,7 @@ _$script(){
         prev=\${COMP_WORDS[COMP_CWORD-1]}
 
         # The basic options we'll complete.
-        options="${options}"
+        options="${long_options}"
 
         # Complete the arguments to some of the basic commands.
         case \$prev in
@@ -185,6 +213,9 @@ EOF
         unset optparse_arguments_string
         unset optparse_defaults
         unset optparse_contractions
-        unset options
+        unset long_options
+
+        # Return file name to parent
+        echo "$build_file"
 }
 # -----------------------------------------------------------------------------------------------------------------------------
