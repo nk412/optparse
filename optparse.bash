@@ -59,14 +59,18 @@ function optparse.define(){
         # build OPTIONS and help
 		optparse_usage="${optparse_usage}#NL#TB${short} $(printf "%-25s %s" "${long}:" "${desc}")"
         if [ "$default" != "" ]; then
-                optparse_usage="${optparse_usage} [default:$default]"
+                if [ "$val" != "\$OPTARG" ]; then
+                        optparse_usage="${optparse_usage} [flag]"
+                else
+                        optparse_usage="${optparse_usage} [default:$default]"
+                fi
         fi
         optparse_contractions="${optparse_contractions}#NL#TB#TB${long})#NL#TB#TB#TBparams=\"\$params ${short}\";;"
         if [ "$default" != "" ]; then
                 optparse_defaults="${optparse_defaults}#NL${variable}=${default}"
         fi
         optparse_arguments_string="${optparse_arguments_string}${shortname}"
-        if [ "$val" = "\$OPTARG" ]; then
+        if [ "$val" == "\$OPTARG" ]; then
                 optparse_arguments_string="${optparse_arguments_string}:"
         fi
         optparse_process="${optparse_process}#NL#TB#TB${shortname})#NL#TB#TB#TB${variable}=\"$val\";;"
@@ -82,12 +86,12 @@ function optparse.build(){
         cat << EOF > $build_file
 function usage(){
 cat << XXX
-usage: \$0 [OPTIONS]
+usage: \$0 [OPTIONS] \$ARGUMENTS
 
 OPTIONS:
         $optparse_usage
 
-        -? --help  :  usage
+        -? -h --help:                usage
 
 XXX
 }
@@ -100,11 +104,15 @@ while [ \$# -ne 0 ]; do
 
         case "\$param" in
                 $optparse_contractions
-                "-?"|--help)
+                "-?"|-h|--help)
                         usage
                         exit 0;;
                 *)
-                        if [[ "\$param" == --* ]]; then
+                        if [[ "\$param" == -- ]]; then
+                                # getopts will handle the "--" correct and stops parsing
+                                params="\$params -- \$@"
+                                break
+                        elif [[ "\$param" == --* ]]; then
                                 echo -e "Unrecognized long option: \$param"
                                 usage
                                 exit 1
@@ -131,6 +139,9 @@ while getopts "$optparse_arguments_string" option; do
                         exit 1;;
         esac
 done
+
+# Shift out all args parsed by getopts
+shift \$((\$OPTIND - 1))
 
 # Clean up after self
 rm $build_file
