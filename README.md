@@ -10,7 +10,7 @@ A wrapper that provides a clean and easy way to parse arguments and create Tab c
 ###3. Source file optparse.bash in the script.
 ###4. Define your arguments in the script.
 
-Each argument to the script is defined with `optparse.define`, which specifies the option names, a short description, the variable it sets, the default value (if any) and a list of posible values (if any). Also you could define options as required to your script.
+Each argument to the script is defined with `optparse.define`, which specifies the option names, a short description, the variable it sets, the default value (if any) and a list of posible values (if any). Also you could define options as required to your script. If you use filesystem file parameters you could define the parameter as a file.
 
 ```bash
 optparse.define short=n long=name desc="The event name" variable=name
@@ -40,18 +40,29 @@ Another way to pass a completion list is to assign a command output to list vari
 optparse.define short=y long=year desc="The event year" variable=year list="\$(my_command)"
 ```
 
+File parameters are defined in exactly the same way, but with an extra parameter `file` that is assigned to the variable. See `wget_dir_generate_completion.sh` as example.
+
+```bash
+optparse.define short=x long=directory-prefix desc="Destination directory to save all files" variable=directory file=true required=true
+```
+
 ###5. Evaluate your arguments
 The `optparse.build` function creates a header script and a configuration file in /etc/bash_completion.d/ based on the provided argument definitions.
 
 ```bash
 optparse.build script_name
 ```
+If you want to generate completion file in another location, you could path location as parameter to `optparse.build` function.
+
+```bash
+optparse.build script_name "."
+```
 
 ###6. Allow execution to the script and execute it as sudo.
 ##### See `sample_event_generate_completion.sh` for a demonstration. For a more complex example see `wget_dir_generate_completion.sh`.
 ###7. Source profile bash completion configuration, example:
 ```bash
-$ source  /etc/bash_completion
+$ source /etc/bash_completion
 ```
 
 ###8. In your command script( The script to parse arguments and generate completion ) source the optparse generated file to parse and evaluate arguments. Also you could check if there are missing options.
