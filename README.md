@@ -1,10 +1,10 @@
 #Optparse
 A BASH wrapper for getopts, for simple command-line argument parsing
 
-## (!) ATTENTION MAC USERS
+### ( ! ) ATTENTION MAC USERS
 Optparse requires `gnu-sed` instead of the default Mac version of sed, which you can do with the following:
 ```
-brew install gnu-sed --with-default-names\
+brew install gnu-sed --with-default-names
 ```
 
 ##What is this?
