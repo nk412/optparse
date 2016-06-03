@@ -104,7 +104,11 @@ while [ \$# -ne 0 ]; do
                         usage
                         exit 0;;
                 *)
-                        if [[ "\$param" == --* ]]; then
+                        if [[ "\$param" == -- ]]; then
+                                # getopts will handle the "--" correct and stops parsing
+                                params="\$params -- \$@"
+                                break
+                        elif [[ "\$param" == --* ]]; then
                                 echo -e "Unrecognized long option: \$param"
                                 usage
                                 exit 1
