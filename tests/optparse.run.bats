@@ -25,17 +25,7 @@
 ###############################################################################
 
 # This sets our global mode' nounset should be used instead of print.
-export OPTPARSE_TEST_MODE="nounset"
-
-@test "test bash set -o nounset - fail when accessing undefined variables" {
-    export OPTPARSE_TEST_MODE="nounset"
-    run ./tests/interface.bash --input afile -a
-    [ "$status" -eq 0 ]
-    [ "${lines[0]}" = "INPUT=afile" ]
-    [ "${lines[1]}" = "OUTPUT=default_value" ]
-    [ "${lines[2]}" = "ATTRIB=true" ]
-    [ "${lines[3]}" = "DEFAULT_WITH_SPACES=default value with spaces" ]
-}
+#export OPTPARSE_TEST_MODE="nounset"
 
 @test "run with no arguments" {
     run ./tests/interface.bash
@@ -43,7 +33,6 @@ export OPTPARSE_TEST_MODE="nounset"
     [ "${lines[0]}" = "INPUT=" ]
     [ "${lines[1]}" = "OUTPUT=default_value" ]
     [ "${lines[2]}" = "ATTRIB=false" ]
-    [ "${lines[3]}" = "DEFAULT_WITH_SPACES=default value with spaces" ]
 }
 
 @test "specify short input argument" {
@@ -52,7 +41,6 @@ export OPTPARSE_TEST_MODE="nounset"
     [ "${lines[0]}" = "INPUT=DEADBEEF" ]
     [ "${lines[1]}" = "OUTPUT=default_value" ]
     [ "${lines[2]}" = "ATTRIB=false" ]
-    [ "${lines[3]}" = "DEFAULT_WITH_SPACES=default value with spaces" ]
 }
 
 @test "specify long input argument" {
@@ -104,4 +92,13 @@ export OPTPARSE_TEST_MODE="nounset"
 @test "test if -- stops argument processing" {
     run ./tests/interface.bash -o one -- -o two
     [ "$status" -eq 0 ]
+}
+
+@test "test bash set -o nounset - fail when accessing undefined variables" {
+    export OPTPARSE_TEST_MODE="nounset"
+    run ./tests/interface.bash --input afile -a
+    [ "$status" -eq 0 ]
+    [ "${lines[0]}" = "INPUT=afile" ]
+    [ "${lines[1]}" = "OUTPUT=default_value" ]
+    [ "${lines[2]}" = "ATTRIB=true" ]
 }

@@ -44,8 +44,8 @@ mode_print() {
     optparse.define short=i long=input desc="The input file. No default" required="true" variable=INPUT value=""
     optparse.define short=o long=output desc="Output file. Default is default_value" variable=OUTPUT default="default_value"
     optparse.define short=a long=attrib desc="Boolean style attribute." variable="ATTRIB" value="true" default="false"
-    optparse.define short=d long=default-value-with-spaces desc="An argument which has spaces in it's default value" variable=DEFAULT_WITH_SPACES default="default value with spaces"
-    optparse.define short=s long=default-value-with-specials desc="An argument with a few special characters in it. A single quote should be handled ok" variable=DEFAULT_WITH_SPECIALS default="this is ' the !@#$%^&*( \${P\} special values"    
+#    optparse.define short=d long=default-value-with-spaces desc="An argument which has spaces in it's default value" variable=DEFAULT_WITH_SPACES default="default value with spaces"
+#    optparse.define short=s long=default-value-with-specials desc="An argument with a few special characters in it. A single quote should be handled ok" variable=DEFAULT_WITH_SPECIALS default="this is ' the !@#$%^&*( \${P\} special values"    
     source $(optparse.build);
 
     echo "INPUT=${INPUT}";
