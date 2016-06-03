@@ -63,7 +63,10 @@ function optparse.define(){
         fi
         optparse_contractions="${optparse_contractions}#NL#TB#TB${long})#NL#TB#TB#TBparams=\"\$params ${short}\";;"
         if [ "$default" != "" ]; then
-                optparse_defaults="${optparse_defaults}#NL${variable}=${default}"
+                default=${default//\'/\'\\\'\'};
+                optparse_defaults="${optparse_defaults}#NL${variable}='${default}'"
+        else
+                optparse_defaults="${optparse_defaults}#NL${variable}=''"
         fi
         optparse_arguments_string="${optparse_arguments_string}${shortname}"
         if [ "$val" = "\$OPTARG" ]; then
