@@ -1,4 +1,4 @@
-#Optparse
+# Optparse
 A BASH wrapper for getopts, for simple command-line argument parsing
 
 ### ( ! ) ATTENTION MAC USERS
