@@ -7,10 +7,10 @@ Optparse requires `gnu-sed` instead of the default Mac version of sed, which you
 brew install gnu-sed --with-default-names
 ```
 
-##What is this?
+## What is this?
 A wrapper that provides a clean and easy way to parse arguments to your BASH scripts. It lets you define short and long option names, handle flag variables, and set default values for optional arguments, all while aiming to be as minimal as possible: *One line per argument definition*.
 
-##Usage
+## Usage
 ##### See `sample_head.sh` for a demonstration of optparse
 ### 1. Define your arguments
 
