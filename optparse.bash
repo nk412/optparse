@@ -41,6 +41,10 @@ function optparse.define(){
         if [ $# -lt 3 ]; then
                 optparse.throw_error "optparse.define <short> <long> <variable> [<desc>] [<default>] [<value>]"
         fi
+
+        # Initialize all local variables. This is needed for set -o nounset
+        local short="" shortname="" long="" longname="" desc="" default="" variable="" val="";
+
         for option_id in $( seq 1 $# ) ; do
                 local option="$( eval "echo \$$option_id")"
                 local key="$( echo $option | awk -F "=" '{print $1}' )";
@@ -86,6 +90,8 @@ function optparse.define(){
         optparse_contractions="${optparse_contractions}#NL#TB#TB${long})#NL#TB#TB#TBparams=\"\$params ${short}\";;"
         if [ "$default" != "" ]; then
                 optparse_defaults="${optparse_defaults}#NL${variable}=${default}"
+        else
+                optparse_defaults="${optparse_defaults}#NL${variable}=\"\""
         fi
         optparse_arguments_string="${optparse_arguments_string}${shortname}"
         if [ "$val" = "\$OPTARG" ]; then
