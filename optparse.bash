@@ -96,7 +96,7 @@ function optparse.define(){
 
 # -----------------------------------------------------------------------------------------------------------------------------
 function optparse.build(){
-        local build_file="/tmp/optparse-${RANDOM}.tmp"
+        local build_file="$(mktemp -t "optparse-XXXXXX.tmp")"
 
         # Building getopts header here
 
