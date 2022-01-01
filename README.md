@@ -27,7 +27,21 @@ optparse.define short=v long=verbose desc="Set flag for verbose mode" variable=v
 ```
 
 ### 2. Evaluate your arguments
-The `optparse.build` function creates a temporary header script based on the provided argument definitions. Simply source the file the function returns, to parse the arguments.
+The `optparse.compose` function prints out the header content based on the provided argument definitions. Simply evaluate the result to parse the arguments.
+
+```bash
+eval "$(optparse.compose)"
+```
+
+If you don't want to have `eval` in your script, source it like:
+
+```bash
+source <<( optparse.compose )
+```
+
+To keep backward compatibility, the `optparse.build` function creates a temporary header script containing the result printed by `optparse.compose`, plus a command to delete itself after sourcing.
+
+Previous scripts source the file the function returns to parse the arguments.
 
 ```bash
 source $( optparse.build )
