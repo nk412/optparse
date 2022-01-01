@@ -101,7 +101,7 @@ function optparse.compose(){
                 UNSET_GLOBAL=false
         fi
         # Composing getopts header
-        cat << EOF | sed 's/#NL/\n/g' | sed 's/#TB/\t/g'
+        cat << EOF | sed 's/#NL/\n/g' | sed 's/#TB/\t/g' | sed 's/[ \t]+$//'
 function usage(){
 cat << XXX
 usage: \$0 [OPTIONS]
