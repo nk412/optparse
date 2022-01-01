@@ -17,7 +17,7 @@ fi
 
 # Display arguments
 if [ "$verbose_mode" = "true" ]; then
-	echo "Verbose mode ON"	
+	echo "Verbose mode ON"
 	echo "FILE  : $file"
 	echo "OUTPUT: $output"
 	echo "LINES : $lines"
@@ -36,4 +36,4 @@ cat $file | head -n $lines > $output
 if [ "$verbose_mode" = "true" ]; then echo "Done."; fi
 
 exit 0
-	
+
