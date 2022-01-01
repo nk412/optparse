@@ -95,13 +95,13 @@ function optparse.define(){
 }
 
 # -----------------------------------------------------------------------------------------------------------------------------
-function optparse.build(){
-        local build_file="$(mktemp -t "optparse-XXXXXX.tmp")"
-
-        # Building getopts header here
-
-        # Function usage
-        cat << EOF > $build_file
+function optparse.compose(){
+        local UNSET_GLOBAL=true
+        if [ "$#" -ge 0 ] && [ "$1" == "--no-unset" ]; then
+                UNSET_GLOBAL=false
+        fi
+        # Composing getopts header
+        cat << EOF | sed 's/#NL/\n/g' | sed 's/#TB/\t/g' | sed 's/[ \t]+$//'
 function usage(){
 cat << XXX
 usage: \$0 [OPTIONS]
@@ -154,23 +154,27 @@ while getopts "$optparse_arguments_string" option; do
         esac
 done
 
-# Clean up after self
-rm $build_file
-
 EOF
+        if $UNSET_GLOBAL; then
+                # Unset global variables
+                unset optparse_usage
+                unset optparse_process
+                unset optparse_arguments_string
+                unset optparse_defaults
+                unset optparse_contractions
+        fi
+}
 
-        local -A o=( ['#NL']='\n' ['#TB']='\t' )
+# -----------------------------------------------------------------------------------------------------------------------------
+# Kept for backward compatibility (2022-01-01)
+function optparse.build(){
+        local build_file="$(mktemp -t "optparse-XXXXXX.tmp")"
 
-        for i in "${!o[@]}"; do
-                sed -i "s/${i}/${o[$i]}/g" $build_file
-        done
+        # Writing configurations into the getopts header
+        optparse.compose > "$build_file"
 
-        # Unset global variables
-        unset optparse_usage
-        unset optparse_process
-        unset optparse_arguments_string
-        unset optparse_defaults
-        unset optparse_contractions
+        # Clean up after self
+        echo 'rm $build_file' >> "$build_file"
 
         # Return file name to parent
         echo "$build_file"

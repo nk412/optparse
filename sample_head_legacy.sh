@@ -8,7 +8,7 @@ optparse.define short=o long=output desc="The output file" variable=output defau
 optparse.define short=l long=lines desc="The number of lines to head (default:5)" variable=lines default=5
 optparse.define short=v long=verbose desc="Flag to set verbose mode on" variable=verbose_mode value=true default=false
 # Source the output file ----------------------------------------------------------
-eval "$(optparse.compose)"
+source $( optparse.build )
 
 if [ "$file" == "" ]; then
 	echo "ERROR: Please provide a file"
